@@ -27,6 +27,8 @@ def make_snake(a, b, list_snake, dis, black):
         pygame.draw.rect(dis, black, [x[0], x[1], a,b])
 
 def process(dis, black, white, green, score_font):
+    speed = 15
+    fps = pygame.time.Clock()
     a = 10 # стартовий розмір змії
     b = 10
     game_over = False
@@ -44,9 +46,8 @@ def process(dis, black, white, green, score_font):
 
     clock = pygame.time.Clock()
 
-    x_food = random.randint(11, 789)  # генерує межі в яких може з'явитись їжа
-    y_food = random.randint(51, 589)
-
+    x_food = random.randrange(20, 780, 10)  # генерує межі в яких може з'явитись їжа
+    y_food = random.randrange(60, 580, 10)
     length_snake = 0 # кількість їжі шо з'їла змія
 
     list_snake = []
@@ -95,7 +96,7 @@ def process(dis, black, white, green, score_font):
 
         if x1 >= 790 or y1 >= 590 or x1 <= 10 or y1 <= 50:  # умова для виходу за границю
             game_close = True
-        x1 += x1_change #можна збільшити швидкість змії збільшивши х1 або у1
+        x1 += x1_change
         y1 += y1_change
 
 
@@ -105,6 +106,9 @@ def process(dis, black, white, green, score_font):
         #pygame.draw.rect(dis, black, [x1, y1, a, b])
         food = pygame.draw.rect(dis, green, [x_food, y_food, 10, 10])
 
+
+##################################################################
+        # Записуються координати голови змії в снейкхед, потім цей масив додається до масиву лістснейк
         snake_head = []
         snake_head.append(x1)
         snake_head.append(y1)
@@ -115,23 +119,26 @@ def process(dis, black, white, green, score_font):
             if x == snake_head:
                 game_close = True
         make_snake(a, b, list_snake, dis, black)
-        #pygame.display.update()
+###################################################################
 
         # Умова коли співпадають координати голови змії з координатами їжі
-        if abs(x1-x_food) <= 10 and abs(y1-y_food) <= 10:
+        if abs(x1-x_food) <= 5 and abs(y1-y_food) <= 5:
             x_food = random.randint(10, 790)
             y_food = random.randint(50, 590)
             food = pygame.draw.rect(dis, white, [x_food, y_food,0, 0])
             length_snake += 1
+            speed+=1
 
         final_score(length_snake, score_font)
         pygame.draw.line(dis, black, (10, 50), (10, 590), width=5)
         pygame.draw.line(dis, black, (10, 50), (790, 50), width=5)
         pygame.draw.line(dis, black, (790, 50), (790, 590), width=5)
         pygame.draw.line(dis, black, (10, 590), (790, 590), width=5)
+
+
         pygame.display.update()
 
-        clock.tick(20)
+        fps.tick(speed)
 
 
 
