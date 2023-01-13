@@ -22,7 +22,9 @@ def final_score(score, score_font):
     value = score_font.render("The score is: " + str(score), True, (0,255,0))
     dis.blit(value, [0,0])
 
-
+def make_snake(a, b, list_snake, dis, black):
+    for x in list_snake:
+        pygame.draw.rect(dis, black, [x[0], x[1], a,b])
 
 def process(dis, black, white, green, score_font):
     a = 10 # стартовий розмір змії
@@ -42,10 +44,12 @@ def process(dis, black, white, green, score_font):
 
     clock = pygame.time.Clock()
 
-    x_food = random.randint(10, 790)  # генерує межі в яких може з'явитись їжа
-    y_food = random.randint(10, 590)
+    x_food = random.randint(11, 789)  # генерує межі в яких може з'явитись їжа
+    y_food = random.randint(51, 589)
 
     length_snake = 0 # кількість їжі шо з'їла змія
+
+    list_snake = []
 
     while not game_over:
 
@@ -98,8 +102,20 @@ def process(dis, black, white, green, score_font):
 
         dis.fill(white)
 
-        pygame.draw.rect(dis, black, [x1, y1, a, b])
+        #pygame.draw.rect(dis, black, [x1, y1, a, b])
         food = pygame.draw.rect(dis, green, [x_food, y_food, 10, 10])
+
+        snake_head = []
+        snake_head.append(x1)
+        snake_head.append(y1)
+        list_snake.append(snake_head)
+        if len(list_snake) > (length_snake + 1):
+            del list_snake[0]
+        for x in list_snake[:-1]:
+            if x == snake_head:
+                game_close = True
+        make_snake(a, b, list_snake, dis, black)
+        #pygame.display.update()
 
         # Умова коли співпадають координати голови змії з координатами їжі
         if abs(x1-x_food) <= 10 and abs(y1-y_food) <= 10:
@@ -120,3 +136,4 @@ def process(dis, black, white, green, score_font):
 
 
 game()
+
